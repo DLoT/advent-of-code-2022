@@ -16,28 +16,6 @@ import { read } from './helpers';
 
 const movesRegex = /move (\d+) from (\d+) to (\d+)/g;
 
-function getResult9000(stackData: string, moves: string,) {
-  const stacks = getStacks(stackData)
-
-  for (const [_, count, from, to] of moves.matchAll(movesRegex)) {
-    const removed = stacks[parseInt(from) - 1].splice(-count)
-    stacks[parseInt(to) - 1].push(...removed.reverse())
-  }
-
-  return stacks.reduce((result, current) => result += current.at(-1), '')
-}
-
-function getResult9001(stackData: string, moves: string,) {
-  const stacks = getStacks(stackData)
-
-  for (const [_, count, from, to] of moves.matchAll(movesRegex)) {
-    const removed = stacks[parseInt(from) - 1].splice(-count)
-    stacks[parseInt(to) - 1].push(...removed)
-  }
-
-  return stacks.reduce((result, current) => result += current.at(-1), '');
-}
-
 (async () => {
   const data = await read(__filename)
 
@@ -55,7 +33,7 @@ function getStacks(stackData: string) {
 
   rows.pop()
 
-  const columnCount = rows.reduce((prev: number, curr: Array<string>) => Math.max(prev, curr.length), 0)
+  const columnCount = rows.reduce((prev: number, curr: Array<string | undefined>) => Math.max(prev, curr.length), 0)
 
   const result: Array<Array<string>> = [];
 
@@ -70,6 +48,28 @@ function getStacks(stackData: string) {
   }
 
   return result;
+}
+
+function getResult9000(stackData: string, moves: string,) {
+  const stacks = getStacks(stackData)
+
+  for (const [_, count, from, to] of moves.matchAll(movesRegex)) {
+    const removed = stacks[parseInt(from) - 1].splice(-count).reverse()
+    stacks[parseInt(to) - 1].push(...removed)
+  }
+
+  return stacks.reduce((result, current) => result += current.at(-1), '')
+}
+
+function getResult9001(stackData: string, moves: string,) {
+  const stacks = getStacks(stackData)
+
+  for (const [_, count, from, to] of moves.matchAll(movesRegex)) {
+    const removed = stacks[parseInt(from) - 1].splice(-count)
+    stacks[parseInt(to) - 1].push(...removed)
+  }
+
+  return stacks.reduce((result, current) => result += current.at(-1), '');
 }
 
 function parse(item: string | undefined) {
