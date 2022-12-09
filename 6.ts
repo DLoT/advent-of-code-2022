@@ -1,6 +1,7 @@
 import { read } from './helpers';
 
 // TODO find the first occurrence of unique chars
+// https://adventofcode.com/2022/day/6
 
 (async () => {
   const data    = await read(__filename)
